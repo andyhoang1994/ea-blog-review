@@ -38,7 +38,7 @@ docker pull postman/newman
 docker run --network postman_tests -t postman/newman run "https://www.getpostman.com/collections/3cc7d607d391703a451d
 ```
 
-Also available on Docker Hub:
+Also available on Docker Hub without the tests:
 ```
 docker pull andyhoang1994/ea-review-blog:1.0
 ```
