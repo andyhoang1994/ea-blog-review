@@ -14,7 +14,7 @@ This is tested on:
 
 Using `make`:
 ```
-make run # To run the containerized API
+make run # To run the containerized blog
 ```
 ```
 make test # To run tests on the API with Postman collections
@@ -25,7 +25,7 @@ Using just `Docker`:
 Simply run the same commands as in the `Makefile`:
 
 ```
-# To run the API
+# To run the blog
 docker build -t andyhoang1994/ea-review-blog:1.0 .
 docker run -p 8000:8000 andyhoang1994/ea-review-blog:1.0
 ```
