@@ -64,4 +64,7 @@ Test results: https://app.circleci.com/pipelines/github/andyhoang1994/ea-review-
 
 This builds the container, tests it against a [Postman collection](https://www.getpostman.com/collections/3cc7d607d391703a451d) to ensure that all the APIs are working, and then pushes it to Docker Hub.
 
+### Front-end
+A basic frontend exists on localhost:8000
 
+It is populated with mock data and is just meant to visualize the posts/comments. The data is pulled from the database.
