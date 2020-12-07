@@ -2,11 +2,17 @@
 
 const express = require("express");
 const app = express();
-const bodyParser = require('body-parser');
+const path = require('path');
 
+const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const HTTP_PORT = 8000;
+
+// Sets the view engine for the frontend
+app.set("views", path.join(__dirname, "../views"));
+app.set("view engine", "ejs");
+app.use(express.static('./public'));
 
 // Starts server
 app.listen(HTTP_PORT, () => {

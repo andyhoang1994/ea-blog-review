@@ -2,11 +2,67 @@
 
 const express = require('express');
 const db = require('../database/db');
-const bodyParser = require('body-parser');
 
+const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const router = express.Router();
+
+/* Front-end Route */
+// Populates mock data and displays it on '/' route
+router.get('/', function (req, res) {
+    let mockText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+    
+    db.serialize(() => {
+        let userStatement = db.prepare("INSERT INTO users (username, first_name, last_name) VALUES (?, ?, ?);");
+        let postStatement = db.prepare("INSERT INTO posts (user_id, date, title, body) VALUES (?, ?, ?, ?);");
+        let commentStatement = db.prepare("INSERT INTO comments (post_id, user_id, date, body) VALUES (?, ?, ?, ?);");
+
+        for(let i = 0; i < 10; i++) {
+            userStatement.run([
+                "User" + "_" + (Math.random() * 10000000),
+                String.fromCharCode(('A').charCodeAt(0) + i) + "im",
+                String.fromCharCode(('A').charCodeAt(0) + i) + "ones"
+            ]);
+        }
+        userStatement.finalize();
+
+        for(let i = 0; i < 20; i++) {
+            postStatement.run([
+                Math.floor(Math.random() * 10) + 1,
+                new Date().toISOString(),
+                "Test Post " + (i + 1),
+                mockText.slice(Math.floor(Math.random() * 10), 36 - Math.floor(Math.random() * 10))
+            ]);
+        }
+        postStatement.finalize();
+
+        for(let i = 0; i < 40; ++i) {
+            commentStatement.run([
+                Math.floor(Math.random() * 20) + 1,
+                Math.floor(Math.random() * 10) + 1,
+                new Date().toISOString(),
+                mockText.slice(Math.floor(Math.random() * 10), 36 - Math.floor(Math.random() * 10))
+            ])
+        }
+        commentStatement.finalize();
+
+        db.all("SELECT * FROM posts INNER JOIN users ON posts.user_id = users.id;",
+            [],
+            (err, posts) => {
+                db.all(`SELECT comments.*, users.username FROM comments
+                    INNER JOIN users ON comments.user_id = users.id;`,
+                    [],
+                    (err, comments) => {
+                        res.render('home', { posts: posts, comments: comments });
+                    }
+                );
+            }
+        )
+    });
+    
+
+});
 
 /* User Routes */
 // Get all users in database
