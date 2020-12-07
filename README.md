@@ -56,10 +56,12 @@ And also [here](./swagger/api.yaml) in yaml format.
 The code for the routes themselves can be found [here](./server/routes.js)
 
 ### Testing Pipeline
-Whenever the project is pushed to github, it goes through a CircleCI pipeline
+Whenever the project is pushed to github, it goes through a CircleCI pipeline.
 
-https://app.circleci.com/pipelines/github/andyhoang1994/ea-review-blog/4/workflows/667a5327-19bb-4714-ba02-d836707d5cd6/jobs/6
+Pipeline: https://app.circleci.com/pipelines/github/andyhoang1994/ea-review-blog/4/workflows/667a5327-19bb-4714-ba02-d836707d5cd6/jobs/6
 
-This builds the container, tests it against a [Postman collection](https://app.circleci.com/pipelines/github/andyhoang1994/ea-review-blog/4/workflows/667a5327-19bb-4714-ba02-d836707d5cd6/jobs/6/parallel-runs/0/steps/0-109) to ensure that all the APIs are working, and then pushes it to Docker Hub
+Test results: https://app.circleci.com/pipelines/github/andyhoang1994/ea-review-blog/4/workflows/667a5327-19bb-4714-ba02-d836707d5cd6/jobs/6/parallel-runs/0/steps/0-109
+
+This builds the container, tests it against a [Postman collection](https://www.getpostman.com/collections/3cc7d607d391703a451d) to ensure that all the APIs are working, and then pushes it to Docker Hub.
 
 
