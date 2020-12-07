@@ -1,0 +1,788 @@
+---
+openapi: 3.0.0
+info:
+  title: Game review blog API
+  description: Documentation for a game review blog API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+tags:
+- name: users
+  description: User that can create posts or comments
+- name: posts
+  description: A game review created by a user that other users can comment on
+- name: comments
+  description: A comment by a user on a post
+paths:
+  /users:
+    get:
+      tags:
+      - users
+      summary: Gets all users
+      description: Gets all users that are in the database
+      responses:
+        "200":
+          description: OK. Users found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/user'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+    post:
+      tags:
+      - users
+      summary: Creates a new user
+      description: Creates a new user and returns their user_id
+      requestBody:
+        description: Values used to create new user
+        content:
+          application/json:
+            schema:
+              required:
+              - first_name
+              - last_name
+              - username
+              type: object
+              properties:
+                username:
+                  type: string
+                  nullable: false
+                first_name:
+                  type: string
+                  nullable: false
+                last_name:
+                  type: string
+                  nullable: false
+        required: true
+      responses:
+        "201":
+          description: OK. User created
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+  /users/{id}:
+    get:
+      tags:
+      - users
+      summary: Gets one user
+      description: Returns one user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. User found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/user'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - users
+      summary: Deletes a user
+      description: Deletes an existing user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. User deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No user found. Nothing to delete
+    patch:
+      tags:
+      - users
+      summary: Updates a user
+      description: Updates an existing user of the parameter id. Can update everything except id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      requestBody:
+        description: Values used to update an existing user
+        content:
+          application/json:
+            schema:
+              required:
+              - first_name
+              - last_name
+              - username
+              type: object
+              properties:
+                username:
+                  type: string
+                  nullable: false
+                first_name:
+                  type: string
+                  nullable: false
+                last_name:
+                  type: string
+                  nullable: false
+        required: true
+      responses:
+        "200":
+          description: OK. User created
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+  /users/{id}/posts:
+    get:
+      tags:
+      - posts
+      summary: Gets all posts of one user
+      description: Gets all posts made by one user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Posts found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/post'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - posts
+      summary: Deletes all posts of user
+      description: Deletes all posts made by one user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Posts deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No user found. Nothing to delete
+  /users/{id}/comments:
+    get:
+      tags:
+      - comments
+      summary: Gets all comments of user
+      description: Gets all comments made by one user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comments found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/comment'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - comments
+      summary: Deletes all comments of user
+      description: Deletes all comments made by one user of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comments deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No user found. Nothing to delete
+  /posts:
+    get:
+      tags:
+      - posts
+      summary: Gets all posts
+      description: Gets all posts that are in the database
+      responses:
+        "200":
+          description: OK. Posts found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/post'
+        "204":
+          description: Requests processed but no data was found
+        "400":
+          description: Bad request error
+    post:
+      tags:
+      - posts
+      summary: Creates a new post
+      description: Creates a new post and returns its id
+      requestBody:
+        description: Values used to create new post
+        content:
+          application/json:
+            schema:
+              required:
+              - body
+              - date
+              - title
+              - user_id
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  nullable: false
+                date:
+                  type: string
+                  format: time-date
+                  nullable: false
+                title:
+                  type: string
+                  nullable: false
+                body:
+                  type: string
+                  nullable: false
+        required: true
+      responses:
+        "201":
+          description: OK. Post created
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+  /posts/{id}:
+    get:
+      tags:
+      - posts
+      summary: Gets one post
+      description: Gets one post of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Post found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/post'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - posts
+      summary: Deletes a post
+      description: Deletes an existing post of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Post deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No post found. Nothing to delete
+    patch:
+      tags:
+      - posts
+      summary: Updates a post
+      description: Updates an existing post of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      requestBody:
+        description: Values used to update an existing post
+        content:
+          application/json:
+            schema:
+              required:
+              - body
+              - date
+              - title
+              type: object
+              properties:
+                title:
+                  type: string
+                  nullable: false
+                body:
+                  type: string
+                  nullable: false
+                date:
+                  type: string
+                  format: time-date
+                  nullable: false
+        required: true
+      responses:
+        "200":
+          description: OK. Post updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/post'
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+  /posts/{id}/comments:
+    get:
+      tags:
+      - comments
+      summary: Gets all comments on post
+      description: Gets all comments on one post of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comments found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/comment'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - comments
+      summary: Deletes all comments on post
+      description: Deletes all comments on an existing post of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comments deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No post found. Nothing to delete
+  /comments:
+    get:
+      tags:
+      - comments
+      summary: Gets all comments
+      description: Gets all comments that are in the database
+      responses:
+        "200":
+          description: OK. Comments found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/comment'
+        "204":
+          description: Requests processed but no data was found
+        "400":
+          description: Bad request error
+    post:
+      tags:
+      - comments
+      summary: Creates a new comment
+      description: Creates a new comment and returns its id
+      requestBody:
+        description: Values used to create new comment
+        content:
+          application/json:
+            schema:
+              required:
+              - body
+              - date
+              - post_id
+              - user_id
+              type: object
+              properties:
+                post_id:
+                  type: integer
+                  nullable: false
+                user_id:
+                  type: integer
+                  nullable: false
+                date:
+                  type: string
+                  format: time-date
+                  nullable: false
+                body:
+                  type: string
+                  nullable: false
+        required: true
+      responses:
+        "201":
+          description: OK. Comment created
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+  /comments/{id}:
+    get:
+      tags:
+      - comments
+      summary: gets one comment
+      description: Gets one comment of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of comment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comment found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/comment'
+        "204":
+          description: Request processed but no data was found
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+    delete:
+      tags:
+      - comments
+      summary: Deletes a comment
+      description: Deletes an existing comment of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of comment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      responses:
+        "200":
+          description: OK. Comment deleted
+        "400":
+          description: Bad request error
+        "404":
+          description: No comment found. Nothing to delete
+    patch:
+      tags:
+      - comments
+      summary: Updates a comment
+      description: Updates an existing comment of the parameter id
+      parameters:
+      - name: id
+        in: path
+        description: Id of comment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          properties:
+            id:
+              type: integer
+              nullable: false
+      requestBody:
+        description: Values used to update an existing comment
+        content:
+          application/json:
+            schema:
+              required:
+              - body
+              - date
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: time-date
+                  nullable: false
+                body:
+                  type: string
+                  nullable: false
+        required: true
+      responses:
+        "200":
+          description: OK. Comment updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    nullable: true
+                    items:
+                      $ref: '#/components/schemas/comment'
+        "400":
+          description: Bad request error
+        "422":
+          description: Proper JSON but bad request
+components:
+  schemas:
+    user:
+      required:
+      - first_name
+      - id
+      - last_name
+      - username
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: Leffen
+        first_name:
+          type: string
+          example: William
+        last_name:
+          type: string
+          example: Hjelte
+    post:
+      required:
+      - body
+      - date
+      - id
+      - title
+      - user_id
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+        user_id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date-time
+          example: 2020-12-06T13:12:11.01Z
+        title:
+          type: string
+          example: 5/5 Guilty Gear is amazing
+        body:
+          type: string
+          example: Very fun game with great art!
+    comment:
+      required:
+      - body
+      - date
+      - id
+      - post_id
+      - user_id
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        post_id:
+          type: integer
+          example: 5
+        user_id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date-time
+          example: 2020-12-06T14:13:12.011Z
+        body:
+          type: string
+          example: I agree. I love the character design!

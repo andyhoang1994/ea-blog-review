@@ -1,0 +1,15 @@
+{
+  "name": "ea-review-blog",
+  "version": "1.0.0",
+  "description": "review blog api",
+  "main": "server.js",
+  "repository": "https://github.com/andyhoang1994/ea-review-blog",
+  "author": "Andy Hoang",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.0"
+  }
+}

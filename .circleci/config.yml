@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@1.5.0
+  newman: postman/newman@0.0.2
+jobs:
+  newman-collection-run:
+    executor: newman/postman-newman-docker
+    steps:
+      - checkout
+      - newman/newman-run:
+          name: postman
+          collection: ./blog.postman_collection.json
+workflows:
+  build-and-publish-docker-image:
+    jobs:
+      - docker/publish:
+          image: andyhoang1994/ea-review-blog
+          tag: '1.0'
+          use-docker-credentials-store: true
+          after_build:
+            - run:
+                name: Test Image
+                command: |
+                  docker network create --gateway=172.0.0.1 --subnet=172.0.0.0/16 postman_tests
+                  docker run --network postman_tests --rm -d -p 8000:8000 andyhoang1994/ea-review-blog:1.0
+                  docker pull postman/newman
+                  docker run --network postman_tests -t postman/newman run "https://www.getpostman.com/collections/3cc7d607d391703a451d
