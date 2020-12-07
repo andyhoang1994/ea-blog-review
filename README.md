@@ -67,4 +67,4 @@ This builds the container, tests it against a [Postman collection](https://www.g
 ### Front-end
 A basic frontend exists on localhost:8000
 
-It is populated with mock data and is just meant to visualize the posts/comments. The data is pulled from the database.
+It is populated with mock data and is just meant to visualize the posts and comments with basic user data. The data is pulled from the database.
